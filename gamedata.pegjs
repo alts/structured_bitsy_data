@@ -16,27 +16,27 @@ title = title:string+ { return title.join(""); }
 flag = "! " flag_name:token+ " " flag_value:boolnum {
 	return {type:'flag', name:flag_name.join(""), value:flag_value}
 }
-palette = "PAL " id:token+ _ "NAME " name:string+ _ colors:palette_colors {
+palette = "PAL " id:id _ "NAME " name:string+ _ colors:palette_colors {
 	return {
 		type: "palette",
-		id: id.join(""),
+		id: id,
 		name: name.join(""),
 		colors: colors
 	}
 }
-tile = "TIL " id:token+ _ pixels:tile_source settings:(_ tile_settings)* {
+tile = "TIL " id:id _ pixels:tile_source settings:(_ tile_settings)* {
 	return {
 		type: "tile",
 		draw_id: "TIL_" + id.join(""),
-		id: id.join(""),
+		id: id,
 		src: pixels,
 		settings:settings.map(second)
 	}
 }
-variable = "VAR " id:token+ _ value:string+ {
+variable = "VAR " id:id _ value:string+ {
 	return {
 		type: "variable",
-		id: id.join(""),
+		id: id,
 		value: value
 	}
 }
@@ -63,6 +63,9 @@ palette_colors = background:color_line _ tile:color_line _ sprite:color_line _{
 }
 color_line = red:byte "," green:byte "," blue:byte {
 	return [red, green, blue]
+}
+id = id:token+ {
+	return id.join("")
 }
 byte = nums:numeral+ {
 	return parseInt(nums.join(""), 10)
