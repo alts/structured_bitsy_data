@@ -10,7 +10,17 @@ game = title:title sections:(_+ section)* _* {
 		sections:sections.map(second)
 	}
 }
-section = comment / flag / palette / tile / variable / room / sprite / item
+section
+	= comment
+	/ flag
+	/ palette
+	/ tile
+	/ variable
+	/ room
+	/ sprite
+	/ item
+	/ dialog
+
 comment = "#" string* _ { return {type:"comment"} }
 title = title:string+ { return title.join(""); }
 flag = "! " flag_name:token+ " " flag_value:boolnum {
@@ -61,6 +71,19 @@ variable = "VAR " id:id _ value:string+ {
 		value: value
 	}
 }
+dialog = "DLG " id:id _ script:(multiline_dialog / singleline_dialog) {
+	return {
+		type: "dialog",
+		id: id,
+		script: script
+	}
+}
+multiline_dialog = script_open script:dialog_script script_close {
+	return script
+}
+singleline_dialog = line:[^\n]+ {
+	return line.join("")
+}
 room = "ROOM " id:id _ tiles:room_source settings:(_ room_settings)* {
 	return {
 		type: "room",
@@ -98,6 +121,12 @@ room_end = "END " id:id ws end_pos:coord {
 		id:id,
 		position:end_pos
 	}
+}
+script_open = script_marker
+script_close = script_marker
+script_marker = '"""'
+dialog_script = chars:(!script_close .)* {
+	return chars.map(second).join("")
 }
 tile_source = head:tile_line tail:(_ tile_line)+ {
 	return [head].concat(tail.map(second))
