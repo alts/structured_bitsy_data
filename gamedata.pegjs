@@ -97,7 +97,7 @@ room = "ROOM " id:id _ tiles:room_source settings:(_ room_settings)* {
 		type: "room",
 		id: id,
 		tiles: tiles,
-		settings: settings
+		settings: settings.map(second)
 	}
 }
 room_source = head:room_line tail:(_ room_line)+ {
