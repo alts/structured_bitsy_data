@@ -20,6 +20,7 @@ section
 	/ sprite
 	/ item
 	/ dialog
+	/ ending
 
 comment = "#" string* _ { return {type:"comment"} }
 title = title:string+ { return title.join(""); }
@@ -78,10 +79,17 @@ dialog = "DLG " id:id _ script:(multiline_dialog / singleline_dialog) {
 		script: script
 	}
 }
+ending = "END " id:id _ text:singleline_dialog {
+	return {
+		type: "ending",
+		id: id,
+		text: text
+	}
+}
 multiline_dialog = script_open script:dialog_script script_close {
 	return script
 }
-singleline_dialog = line:[^\n]+ {
+singleline_dialog = line:[^\n]* {
 	return line.join("")
 }
 room = "ROOM " id:id _ tiles:room_source settings:(_ room_settings)* {
