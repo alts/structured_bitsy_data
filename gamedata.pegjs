@@ -10,7 +10,7 @@ game = title:title sections:(_+ section)* _* {
 		sections:sections.map(second)
 	}
 }
-section = comment / flag / palette / tile / variable / room
+section = comment / flag / palette / tile / variable / room / sprite
 comment = "#" string* _ { return {type:"comment"} }
 title = title:string+ { return title.join(""); }
 flag = "! " flag_name:token+ " " flag_value:boolnum {
@@ -32,6 +32,16 @@ tile = "TIL " id:id _ pixels:tile_source second_frame:(_ ">" _ tile_source)? set
 		src: pixels,
 		second_frame: second_frame ? second_frame[3] : null,
 		settings:settings.map(second)
+	}
+}
+sprite = "SPR " id:id _ pixels:tile_source second_frame:(_ ">" _ tile_source)? settings:(_ sprite_settings)* {
+	return {
+		type: "sprite",
+		draw_id: "SPR_" + id,
+		id: id,
+		src: pixels,
+		second_frame: second_frame ? second_frame[3] : null,
+		settings: settings.map(second)
 	}
 }
 variable = "VAR " id:id _ value:string+ {
@@ -89,17 +99,29 @@ tile_wall = "WAL " is_wall:bool_string {
 
 room_name = name_tag
 tile_name = name_tag
+sprite_name = name_tag
 name_tag = "NAME " name:string+ {
 	return {tag:"name", value:name.join("")}
 }
 
 tile_color = color_tag
+sprite_color = color_tag
 color_tag = "COL " color_index:numeral {
 	return {tag:"color_index", value:parseInt(numeral, 10)}
 }
 
 
 tile_line = bit+
+sprite_settings = sprite_color / sprite_pos / sprite_dialog / sprite_name / sprite_item
+sprite_pos = "POS " room_id:id ws position:coord {
+	return {tag:"position", room_id:room_id, position:position}
+}
+sprite_dialog = "DLG " dialog_id:id {
+	return {tag:"dialog", dialog_id:dialog_id}
+}
+sprite_item = "ITM " item_id:id ws count:number {
+	return {tag:"item", item_id:item_id, count:count}
+}
 palette_colors = background:color_line _ tile:color_line _ sprite:color_line _{
 	return {
 		background:background,
