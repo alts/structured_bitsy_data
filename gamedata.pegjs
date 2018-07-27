@@ -24,8 +24,8 @@ section
 
 comment = "#" string* _ { return {type:"comment"} }
 title = title:string+ { return title.join(""); }
-flag = "! " flag_name:token+ " " flag_value:boolnum {
-	return {type:'flag', name:flag_name.join(""), value:flag_value}
+flag = "! " id:id " " flag_value:boolnum {
+	return {type:'flag', id:id, value:flag_value}
 }
 palette = "PAL " id:id _ "NAME " name:string+ _ colors:palette_colors {
 	return {
