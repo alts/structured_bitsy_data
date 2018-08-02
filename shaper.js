@@ -67,9 +67,12 @@ function consumeSprite(section, gameData) {
 		drawId: section.draw_id,
 		colorIndex: 2,
 		dialogId: null,
+		// these location attributes are used to store sprites in motion
 		room: null,
 		x: -1,
 		y: -1,
+		// this attribute is moved from a global in bitsy.js into each sprite here
+		startingPosition: null,
 		walkingPath: [],
 		animation: {
 			isAnimated: isAnimated,
@@ -161,7 +164,16 @@ function applySpriteSettings(spriteSettings, spriteObject) {
 		if (setting.tag == 'color_index') {
 			spriteObject.colorIndex = setting.value;
 		}
-		// add sprite position
+		if (setting.tag == 'position') {
+			// in bitsy.js, this object is stored in the global
+			// spriteStartingPositions object. I don't think I want to preserve
+			// that structure
+			spriteObject.startingPosition = {
+				room: setting.room_id,
+				x: setting.position[0],
+				y: setting.position[1]
+			};
+		}
 		if (setting.tag == 'item') {
 			spriteObject.inventory[setting.item_id] = setting.count;
 		}
