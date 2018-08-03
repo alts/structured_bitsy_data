@@ -132,6 +132,13 @@ function serializeEnding(endingId, endingText) {
 	];
 }
 
+function serializeVariable(variableId, variableValue) {
+	return [
+		`VAR ${variableId}`,
+		variableValue
+	];
+}
+
 const serializers = {
 	comments: serializeComment,
 	flags: serializeFlag,
@@ -141,7 +148,8 @@ const serializers = {
 	sprites: serializeSprite,
 	items: serializeItem,
 	dialogs: serializeDialog,
-	endings: serializeEnding
+	endings: serializeEnding,
+	variables: serializeVariable
 }
 
 function serialize(gameData) {
@@ -170,7 +178,7 @@ function serialize(gameData) {
 		});
 	});
 
-	['dialogs', 'endings'].forEach(plainKeySerializer);
+	['dialogs', 'endings', 'variables'].forEach(plainKeySerializer);
 
 	return lines;
 }

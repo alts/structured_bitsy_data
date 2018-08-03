@@ -69,7 +69,7 @@ variable = "VAR " id:id _ value:string+ {
 	return {
 		type: "variable",
 		id: id,
-		value: value
+		value: value.join("")
 	}
 }
 dialog = "DLG " id:id _ script:(multiline_dialog / singleline_dialog) {

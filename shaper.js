@@ -25,6 +25,10 @@ function consumeFlag(section, gameData) {
 	return section.value;
 }
 
+function consumeVariable(section, gameData) {
+	return section.value;
+}
+
 function consumeTile(section, gameData) {
 	const isAnimated = section.second_frame !== null;
 	let baseObject = {
@@ -212,7 +216,8 @@ const typeKeyMapping = {
 	sprite: 'sprites',
 	item: 'items',
 	dialog: 'dialogs',
-	ending: 'endings'
+	ending: 'endings',
+	variable: 'variables'
 };
 
 const typeShapers = {
@@ -224,7 +229,8 @@ const typeShapers = {
 	sprite: consumeSprite,
 	item: consumeItem,
 	dialog: consumeDialog,
-	ending: consumeEnding
+	ending: consumeEnding,
+	variable: consumeVariable
 }
 
 function reshape(raw_parse_data) {
