@@ -130,8 +130,8 @@ room_end = "END " id:id ws end_pos:coord {
 		position:end_pos
 	}
 }
-script_open = script_marker
-script_close = script_marker
+script_open = script_marker _
+script_close = _ script_marker
 script_marker = '"""'
 dialog_script = chars:(!script_close .)* {
 	return chars.map(second).join("")
